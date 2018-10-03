@@ -6,6 +6,7 @@
   "scripts": {
     "test": "mocha",
     "start": "ts-node src/server.ts",
+    "lint": "./node_modules/.bin/tslint -c tslint.json --fix 'src/**/*.ts'",
     "docker:build": "./node_modules/.bin/ts-node ./scripts/dockerBuild.ts"
   },
   "author": "bschulte@kryptowire.com",
@@ -13,11 +14,13 @@
   "dependencies": {
     "@types/dotenv": "^4.0.3",
     "@types/express": "^4.16.0",
+    "@types/winston": "^2.4.4",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
-    "typescript": "^3.1.1"
+    "typescript": "^3.1.1",
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "eslint": "^5.6.1",

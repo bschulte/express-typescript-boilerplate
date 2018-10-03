@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 import express from "express";
 
+import { ERROR, INFO, logger } from "./logging";
+
 // Initialize any enviornment variables
 dotenv.config();
 
@@ -10,8 +12,8 @@ const port: number = Number(process.env.PORT) || 3000;
 
 app.listen(port, (err: Error) => {
   if (err) {
-    console.log(err);
+    logger.log(ERROR, err.message);
   } else {
-    console.log(`App listening on port: ${port}`);
+    logger.log(INFO, `App listening on port: ${port}`);
   }
 });
