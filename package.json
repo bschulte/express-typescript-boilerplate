@@ -6,6 +6,7 @@
   "scripts": {
     "test": "mocha",
     "start": "ts-node src/server.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
     "lint": "./node_modules/.bin/tslint -c tslint.json --fix 'src/**/*.ts'",
     "docker:build": "./node_modules/.bin/ts-node ./scripts/dockerBuild.ts"
   },
@@ -21,10 +22,5 @@
     "tslint": "^5.11.0",
     "typescript": "^3.1.1",
     "winston": "^3.1.0"
-  },
-  "devDependencies": {
-    "eslint": "^5.6.1",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
   }
 }
