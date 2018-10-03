@@ -8,7 +8,9 @@ const ERROR: string = "error";
 
 const customFormat = printf((info: LogEntry) => {
   const { timestamp, level, message, ...rest } = info;
-  return `${timestamp} [${level}] ${message} ${JSON.stringify({ ...rest })}`;
+  return `${timestamp} [${level}] ${message} ${
+    Object.keys(rest).length > 0 ? JSON.stringify({ ...rest }) : ""
+  }`;
 });
 
 const standardFormat = combine(
