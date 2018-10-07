@@ -1,6 +1,8 @@
+import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
+import swagger from "swagger-ui-express";
 
 import { ERROR, INFO, logger, LoggerStream } from "./logging";
 import { userRouter } from "./routes";
@@ -17,8 +19,15 @@ const port: number = Number(process.env.PORT) || 3000;
   // Start up the database
   await sequelize.sync();
 
+  // JSON body parser
+  app.use(bodyParser.json());
+
   // Morgan logging
   app.use(morgan("combined", { stream: new LoggerStream() }));
+
+  // Swagger API documentation
+  const swaggerDocument = require("../swagger.json");
+  app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocument));
 
   // Routes
   app.use("/user", userRouter);

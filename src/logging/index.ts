@@ -40,7 +40,9 @@ const logger: Logger = createLogger({
 
 // If we're not in the production environment, log to the console also
 if (process.env.NODE_ENV !== "production") {
-  logger.add(new transports.Console({ format: standardFormat }));
+  logger.add(
+    new transports.Console({ format: standardFormat, handleExceptions: true })
+  );
 }
 
 // Class for Morgan to use as a stream for logging

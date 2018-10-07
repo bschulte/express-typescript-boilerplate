@@ -1,13 +1,19 @@
 import {
   Column,
   CreatedAt,
+  Default,
   Model,
   Table,
+  Unique,
   UpdatedAt
 } from "sequelize-typescript";
 
 @Table
 export default class User extends Model<User> {
+  @Column
+  public username!: string;
+
+  @Unique
   @Column
   public email!: string;
 
@@ -15,16 +21,19 @@ export default class User extends Model<User> {
   public password!: string;
 
   @CreatedAt
-  @Column
   public createdAt!: Date;
 
   @UpdatedAt
-  @Column
   public updatedAt!: Date;
 
+  @Default(0)
   @Column
   public loginAttempts!: number;
 
+  @Default(false)
   @Column
-  public locked!: number;
+  public locked!: boolean;
+
+  @Column
+  public apiKey!: string;
 }

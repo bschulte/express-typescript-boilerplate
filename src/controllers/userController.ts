@@ -2,9 +2,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import moment from "moment";
 import owasp from "owasp-password-strength-test";
-import randToken from "rand-token";
 
-import { DEBUG, ERROR, logger } from "../logging/";
+import { DEBUG, ERROR, logger, WARN } from "../logging/";
 import { User } from "../models";
 // import emailer from "../Helpers/Email";
 
@@ -29,12 +28,13 @@ export const createUser = async (username: string, email: string) => {
   const passHash: string = bcrypt.hashSync(password, 10);
 
   try {
-    const user = await User.create({
-      api_key: apiKey,
+    const user = new User({
+      apiKey,
       email,
       password: passHash,
       username
     });
+    await user.save();
 
     logger.log(
       "debug",
@@ -45,6 +45,22 @@ export const createUser = async (username: string, email: string) => {
   } catch (err) {
     logger.log("warn", `Error creating user DB entry: ${err}`);
     return { successfullyCreatedUser: false };
+  }
+};
+
+export const getUser = async (userId: number) => {
+  const user = await User.findOne({
+    attributes: { exclude: ["password"] },
+    where: { id: userId }
+  });
+
+  if (user) {
+    // We don't want to return the user's password hash
+    delete user.password;
+    return user;
+  } else {
+    logger.log(WARN, `Could not find user! Provied is: ${userId}`);
+    return null;
   }
 };
 // Delete a user

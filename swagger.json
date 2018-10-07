@@ -1,0 +1,159 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "This is sample documentation for the boilerplate.",
+    "version": "0.0.1",
+    "title": "Boilerplate Documentation",
+    "contact": {
+      "email": "user@domain.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "user",
+      "description": "Access to users"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create a new user",
+        "description": "",
+        "operationId": "createUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "testuser@domain.com"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "testuser"
+                  }
+                },
+                "required": [
+                  "email",
+                  "username"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully created user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the creation was successful or not"
+                    },
+                    "generatedPassword": {
+                      "type": "string",
+                      "description": "Password generated for the user",
+                      "example": "23oihf9283hf203ijf2io3jf"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get user by user name",
+        "operationId": "getUserByName",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "Database ID of the user to be fetched",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully got user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "username": {
+            "type": "string",
+            "example": "testuser"
+          },
+          "email": {
+            "type": "string",
+            "example": "testuser@domain.com"
+          },
+          "loginAttempts": {
+            "type": "integer",
+            "example": 2
+          },
+          "locked": {
+            "type": "boolean",
+            "example": false
+          },
+          "apiKey": {
+            "type": "string",
+            "example": "2388h2hI129jJH3j4ngsiej23k4"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}
