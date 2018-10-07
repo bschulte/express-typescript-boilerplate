@@ -26,9 +26,15 @@ const logger: Logger = createLogger({
   transports: [
     new transports.File({
       filename: "logs/server.log",
-      format: standardFormat
+      format: standardFormat,
+      maxFiles: 5,
+      maxsize: 5242880 // 5MB
     }),
-    new transports.File({ filename: "logs/error.log", level: "error" })
+    new transports.File({
+      filename: "logs/error.log",
+      handleExceptions: true,
+      level: "error"
+    })
   ]
 });
 
@@ -37,4 +43,11 @@ if (process.env.NODE_ENV !== "production") {
   logger.add(new transports.Console({ format: standardFormat }));
 }
 
-export { DEBUG, ERROR, INFO, WARN, logger };
+// Class for Morgan to use as a stream for logging
+class LoggerStream {
+  public write(message: string) {
+    logger.info(message);
+  }
+}
+
+export { DEBUG, ERROR, INFO, WARN, LoggerStream, logger };
