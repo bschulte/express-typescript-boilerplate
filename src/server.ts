@@ -5,8 +5,8 @@ import morgan from "morgan";
 import swagger from "swagger-ui-express";
 
 import { ERROR, INFO, logger, LoggerStream } from "./logging";
+import { sequelize } from "./models/sequelize";
 import { userRouter } from "./routes";
-import { sequelize } from "./sequelize";
 
 // Initialize any enviornment variables
 dotenv.config();
@@ -15,7 +15,7 @@ const app: express.Application = express();
 
 const port: number = Number(process.env.PORT) || 3000;
 
-(async () => {
+(async (): Promise<void> => {
   // Start up the database
   await sequelize.sync();
 

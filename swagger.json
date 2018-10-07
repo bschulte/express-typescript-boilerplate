@@ -151,6 +151,10 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "lastLogin": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }

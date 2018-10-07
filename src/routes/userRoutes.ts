@@ -1,8 +1,22 @@
 import { Request, Response, Router } from "express";
 
-import { createUser, getUser, deleteUser } from "../controllers/userController";
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  login
+} from "../controllers/userController";
 
 const router: Router = Router();
+
+// Login a user
+router.get("/login", async (req: Request, res: Response) => {
+  const { email, password } = req.query;
+
+  const { status, data } = await login(email, password);
+
+  return res.status(status).json(data);
+});
 
 // Get user by ID
 router.get("/:userId", async (req: Request, res: Response) => {

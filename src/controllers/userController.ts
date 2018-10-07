@@ -5,6 +5,8 @@ import owasp from "owasp-password-strength-test";
 
 import { DEBUG, ERROR, logger, WARN } from "../logging/";
 import { User } from "../models";
+import { sequelize } from "../models/sequelize";
+import { validateEmail } from "../util";
 // import emailer from "../Helpers/Email";
 
 // Generate a random string. Used for API key and random token creation
@@ -41,10 +43,7 @@ export const createUser = async (
     });
     await user.save();
 
-    logger.log(
-      "debug",
-      `User entered into DB: ${JSON.stringify(user.dataValues)}`
-    );
+    logger.log("debug", `User entered into DB: ${JSON.stringify(user)}`);
 
     return { successfullyCreatedUser: true, generatedPassword: password };
   } catch (err) {
@@ -82,76 +81,79 @@ export const deleteUser = async (userId: number): Promise<boolean> => {
   }
 };
 
-/*
-  // Check if a valid username and password is provided and return a JWT if so
-  async login(email, password) {
-    const user = await db.User.findOne({
-      where: {
-        email: email
-      }
-    })
-    if (user) {
-      logger.log('debug', `Attempting to login user: ${user.email}`)
-      // Check if the account is locked
-      if (user.locked) {
-        logger.log('error', 'User tried to log into locked account')
-        return {
-          status: 401,
-          data: {
-            msg:
-              'This account is locked, please contact the system administrator for assistance.'
-          }
-        }
-      }
-      // Verify the password
-      if (bcrypt.compareSync(password, user.password)) {
-        // Password correct, create JWT token
-        const token = jwt.sign(user.dataValues, process.env.APP_KEY, {
-          expiresIn: '12h'
-        })
-        // Update the last logged in field for the user
-        await user.updateAttributes({
-          last_login: db.sequelize.fn('NOW'),
-          login_attempts: 0
-        })
-        return { status: 200, data: { token: token }, user }
-      } else {
-        // Invalid password given, add the bad login attempt to the database
-        await user.increment('login_attempts')
-        logger.log('warn', 'Invalid password attempt')
-        if (user.login_attempts >= 5) {
-          await user.updateAttributes({
-            locked: 1
-          })
-          logger.log('error', 'Account now locked from too many login attempts')
-          return {
-            status: 401,
-            data: {
-              msg:
-                'Account is locked due to too many login attempts, please contact system administrator for assistance.'
-            }
-          }
-        } else {
-          return {
-            status: 401,
-            data: {
-              msg:
-                'Invalid email and/or password. Upon 5 incorrect logins the account will be locked.'
-            }
-          }
-        }
-      }
-    } else {
-      logger.log('error', `Login attempt unsuccessful: ${email}`)
+// Check if a valid username and password is provided and return a JWT if so
+export const login = async (email: string, password: string): Promise<any> => {
+  const user = await User.findOne({
+    where: {
+      email
+    }
+  });
+
+  if (user) {
+    logger.log(DEBUG, `Attempting to login user: ${user.email}`);
+
+    // Check if the account is locked
+    if (user.locked) {
+      logger.log(ERROR, "User tried to log into locked account");
       return {
-        status: 401,
         data: {
           msg:
-            'Invalid email and/or password. Upon 5 incorrect logins the account will be locked.'
-        }
+            "This account is locked, please contact the system administrator for assistance."
+        },
+        status: 401
+      };
+    }
+
+    // Verify the password
+    if (bcrypt.compareSync(password, user.password)) {
+      // Password correct, create JWT token
+      const token = jwt.sign(user.dataValues, process.env.APP_KEY, {
+        expiresIn: "12h"
+      });
+      // Update the last logged in field for the user
+      await user.updateAttributes({
+        lastLogin: sequelize.fn("NOW"),
+        loginAttempts: 0
+      });
+      return { status: 200, data: { token }, user };
+    } else {
+      // Invalid password given, add the bad login attempt to the database
+      await user.increment("loginAttempts");
+      logger.log(WARN, "Invalid password attempt");
+      if (user.loginAttempts >= 5) {
+        await user.updateAttributes({
+          locked: 1
+        });
+        logger.log(ERROR, "Account now locked from too many login attempts");
+        return {
+          data: {
+            msg:
+              "Account is locked due to too many login attempts, please contact system administrator for assistance."
+          },
+          status: 401
+        };
+      } else {
+        return {
+          data: {
+            msg:
+              "Invalid email and/or password. Upon 5 incorrect logins the account will be locked."
+          },
+          status: 401
+        };
       }
     }
-  },
+  } else {
+    logger.log("error", `Login attempt unsuccessful: ${email}`);
+    return {
+      data: {
+        msg:
+          "Invalid email and/or password. Upon 5 incorrect logins the account will be locked."
+      },
+      status: 401
+    };
+  }
+};
+/*
   // Simple verification of the token sent in the auth header
   // Also retrieves information about the user that the portal uses for rendering
   async verifyAuth(user) {

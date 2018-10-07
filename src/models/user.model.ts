@@ -13,7 +13,6 @@ export default class User extends Model<User> {
   @Column
   public username!: string;
 
-  @Unique
   @Column
   public email!: string;
 
@@ -25,6 +24,9 @@ export default class User extends Model<User> {
 
   @UpdatedAt
   public updatedAt!: Date;
+
+  @Column
+  public lastLogin!: Date;
 
   @Default(0)
   @Column

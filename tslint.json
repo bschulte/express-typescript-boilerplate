@@ -3,6 +3,17 @@
   "rules": {
     "no-console": false,
     "trailing-comma": false,
-    "no-shadowed-variable": false
+    "no-shadowed-variable": false,
+    "typedef": [
+      true,
+      "call-signature",
+      "property-declaration",
+      "arrow-parameter",
+      "parameter",
+      "arrow-call-signature"
+    ],
+    "no-inferrable-types": true,
+    "no-unused-variable": true,
+    "max-line-length": false
   }
 }
