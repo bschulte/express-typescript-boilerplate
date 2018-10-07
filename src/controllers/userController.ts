@@ -7,6 +7,7 @@ import { DEBUG, ERROR, logger, WARN } from "../logging/";
 import { User } from "../models";
 // import emailer from "../Helpers/Email";
 
+// Generate a random string. Used for API key and random token creation
 export const generateRandomString = (strLength: number): string => {
   // Create a random string (like for generating API key)
   let text = "";
@@ -18,7 +19,11 @@ export const generateRandomString = (strLength: number): string => {
   return text;
 };
 
-export const createUser = async (username: string, email: string) => {
+// Create a user
+export const createUser = async (
+  username: string,
+  email: string
+): Promise<any> => {
   // Create random password
   const password: string = generateRandomString(24);
   // Create API key
@@ -48,7 +53,8 @@ export const createUser = async (username: string, email: string) => {
   }
 };
 
-export const getUser = async (userId: number) => {
+// Get a user by ID
+export const getUser = async (userId: number): Promise<any> => {
   const user = await User.findOne({
     attributes: { exclude: ["password"] },
     where: { id: userId }
@@ -63,22 +69,20 @@ export const getUser = async (userId: number) => {
     return null;
   }
 };
-// Delete a user
+
+// Delete a user by ID
+export const deleteUser = async (userId: number): Promise<boolean> => {
+  try {
+    await User.destroy({ where: { id: userId } });
+    logger.log(DEBUG, `Deleted user, id: ${userId}`);
+    return true;
+  } catch (err) {
+    logger.log(WARN, `Error deleting user: ${err}`);
+    return false;
+  }
+};
+
 /*
-  async deleteUser(userId) {
-    try {
-      await db.User.destroy({ where: { id: userId } })
-      await db.UserPage.destroy({ where: { user_id: userId } })
-      await db.ActiveRiskProfile.destroy({ where: { user_id: userId } })
-      await db.UserConfig.destroy({ where: { user_id: userId } })
-      await db.UserAccess.destroy({ where: { user_id: userId } })
-      logger.log('debug', `Deleted user, id: ${userId}`)
-      return true
-    } catch (err) {
-      logger.log('warn', `Error deleting user: ${err}`)
-      return false
-    }
-  },
   // Check if a valid username and password is provided and return a JWT if so
   async login(email, password) {
     const user = await db.User.findOne({
