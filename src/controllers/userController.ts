@@ -4,9 +4,8 @@ import moment from "moment";
 import owasp from "owasp-password-strength-test";
 import randToken from "rand-token";
 
-// import { db } from "../Models/database";
-
 import { DEBUG, ERROR, logger } from "../logging/";
+import { User } from "../models";
 // import emailer from "../Helpers/Email";
 
 export const generateRandomString = (strLength: number): string => {
@@ -29,82 +28,24 @@ export const createUser = async (username: string, email: string) => {
   logger.log(DEBUG, `Creating new user: ${email}`);
   const passHash: string = bcrypt.hashSync(password, 10);
 
-  let result;
   try {
-    result = await db.User.create({
+    const user = await User.create({
       api_key: apiKey,
       email,
       password: passHash,
       username
     });
+
+    logger.log(
+      "debug",
+      `User entered into DB: ${JSON.stringify(user.dataValues)}`
+    );
+
+    return { successfullyCreatedUser: true, generatedPassword: password };
   } catch (err) {
     logger.log("warn", `Error creating user DB entry: ${err}`);
     return { successfullyCreatedUser: false };
   }
-  logger.log(
-    "debug",
-    `User entered into DB: ${JSON.stringify(result.dataValues)}`
-  );
-
-  // Create the default user pages
-  logger.log("debug", "Creating default user pages...");
-  const defaultPages = require(__dirname +
-    "/../bin/management/defaultUserPages.json");
-  for (const page of defaultPages) {
-    try {
-      await db.UserPage.create({
-        user_id: result.id,
-        name: page.name,
-        nav_json: page.nav_json,
-        enabled: page.enabled,
-        order: page.order
-      });
-    } catch (err) {
-      logger.log("error", `Error creating user page: ${err}`);
-      return { successfullyCreatedUser: false };
-    }
-  }
-  // Create the default config values for the user
-  logger.log("debug", "Creating default user config values...");
-  const defaultConfig = require(__dirname +
-    "/../bin/management/defaultUserConfig.json");
-  for (const configValue of defaultConfig) {
-    try {
-      await db.UserConfig.create({
-        user_id: result.id,
-        key: configValue.key,
-        value: configValue.value
-      });
-    } catch (err) {
-      logger.log("error", `Error creating user config value: ${err}`);
-      return { successfullyCreatedUser: false };
-    }
-  }
-  // Create the default access values for the user
-  logger.log("debug", "Creating default user access values...");
-  const defaultAccess = require(__dirname +
-    "/../bin/management/defaultUserAccess.json");
-  for (const accessValue of defaultAccess) {
-    try {
-      await db.UserAccess.create({
-        user_id: result.id,
-        key: accessValue.key,
-        value: accessValue.value,
-        type: accessValue.type
-      });
-    } catch (err) {
-      logger.log("error", `Error creating user access value: ${err}`);
-      return { successfullyCreatedUser: false };
-    }
-  }
-  // Add the default user risk score profile
-  logger.log("debug", "Creating default active risk profile...");
-  await db.ActiveRiskProfile.create({
-    user_id: result.id,
-    risk_profile_id: 1,
-    custom: 0
-  });
-  return { successfullyCreatedUser: true, generatedPassword: password };
 };
 // Delete a user
 /*

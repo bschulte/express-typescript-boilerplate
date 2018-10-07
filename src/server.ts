@@ -3,6 +3,7 @@ import express from "express";
 import morgan from "morgan";
 
 import { ERROR, INFO, logger, LoggerStream } from "./logging";
+import { userRouter } from "./routes";
 import { sequelize } from "./sequelize";
 
 // Initialize any enviornment variables
@@ -18,6 +19,9 @@ const port: number = Number(process.env.PORT) || 3000;
 
   // Morgan logging
   app.use(morgan("combined", { stream: new LoggerStream() }));
+
+  // Routes
+  app.use("/user", userRouter);
 
   app.listen(port, (err: Error) => {
     if (err) {
