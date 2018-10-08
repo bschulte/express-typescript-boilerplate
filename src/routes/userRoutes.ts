@@ -63,4 +63,9 @@ router.delete("/:userId", async (req: Request, res: Response) => {
   }
 });
 
+// Simple route to verify if the user's provided API key/token is valid
+router.get("/verify-auth", (req: Request, res: Response) => {
+  return res.sendStatus(200);
+});
+
 export const userRouter: Router = router;

@@ -154,45 +154,6 @@ export const login = async (email: string, password: string): Promise<any> => {
   }
 };
 /*
-  // Simple verification of the token sent in the auth header
-  // Also retrieves information about the user that the portal uses for rendering
-  async verifyAuth(user) {
-    // Get the user's config values and add that to the user object
-    const userConfigResult = await db.UserConfig.findAll({
-      where: { user_id: user.id }
-    })
-    const userConfig = {}
-    for (let option of userConfigResult) {
-      userConfig[option.key] = parseInt(option.value) === 1 ? true : false
-    }
-    // Get the user's access values and add that to the user object
-    const userAccessResult = await db.UserAccess.findAll({
-      where: { user_id: user.id }
-    })
-    const userAccess = {}
-    for (let access of userAccessResult) {
-      userAccess[access.key] = parseInt(access.value)
-    }
-    // Get the apps submitted by the user
-    const androidAppsSubmitted = await db.AnalyzedApp.count({
-      where: { user_id: user.id },
-      include: [{ model: db.FarmApp, where: { platform: 'android' } }]
-    })
-    const iosAppsSubmitted = await db.AnalyzedApp.count({
-      where: { user_id: user.id },
-      include: [{ model: db.FarmApp, where: { platform: 'ios' } }]
-    })
-    return {
-      status: 200,
-      data: {
-        email: user.email,
-        config: userConfig,
-        access: userAccess,
-        androidSubmissions: androidAppsSubmitted,
-        iosSubmissions: iosAppsSubmitted
-      }
-    }
-  },
   // Get a listing of pages the user has access to
   async getPages(user) {
     logger.log('debug', `Getting list of pages user has access to: ${user}`)
