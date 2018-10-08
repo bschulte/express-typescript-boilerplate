@@ -159,6 +159,78 @@
           }
         }
       }
+    },
+    "/verify-auth": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Verify that a user's API key/token is valid",
+        "description": "",
+        "operationId": "verfyAuth",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "Database ID of the user to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully verified user"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/password": {
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Change a user's password",
+        "description": "",
+        "operationId": "changePassword",
+        "parameters": [
+          {
+            "name": "currentPassword",
+            "in": "query",
+            "description": "User's current password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newPassword",
+            "in": "query",
+            "description": "User's new password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully changed user's password"
+          },
+          "400": {
+            "description": "Invalid new password entered"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
     }
   },
   "components": {

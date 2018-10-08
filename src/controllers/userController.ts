@@ -153,67 +153,52 @@ export const login = async (email: string, password: string): Promise<any> => {
     };
   }
 };
-/*
-  // Get a listing of pages the user has access to
-  async getPages(user) {
-    logger.log('debug', `Getting list of pages user has access to: ${user}`)
-    const pages = await db.UserPage.findAll({
-      attributes: ['nav_json'],
-      where: {
-        user_id: user.id,
-        enabled: 1
-      },
-      order: [['order', 'ASC']]
-    })
-    const navJson = []
-    for (let page of pages) {
-      navJson.push(page.nav_json)
-    }
-    return {
-      status: 200,
-      data: navJson
-    }
-  },
-  // Attempt to change the user's password
-  async changePassword(user, currentPass, newPass) {
-    if (bcrypt.compareSync(currentPass, user.password)) {
-      // Check for password minimums
-      const passTestResult = owasp.test(newPass)
-      if (!passTestResult.strong) {
-        logger.log(
-          'error',
-          `Invalid new password entered: ${user.email}, errors: ${
-            passTestResult.errors
-          }`
-        )
-        return {
-          status: 400,
-          data: {
-            msg: 'Invalid new password',
-            errors: passTestResult.errors
-          }
-        }
-      }
-      // If the user provided the correct password, and their new password meets the
-      // minimum requirements, update their user record with the new password
-      const userRecord = await db.User.findOne({
-        where: { email: user.email }
-      })
-      await userRecord.updateAttributes({
-        password: bcrypt.hashSync(newPass, 10)
-      })
-      return { status: 200, data: { success: true } }
-    } else {
-      logger.warn('debug', 'Incorrect password given during password change')
+
+// Attempt to change the user's password
+export const changePassword = async (
+  user: User,
+  currentPass: string,
+  newPass: string
+): Promise<any> => {
+  if (bcrypt.compareSync(currentPass, user.password)) {
+    // Check for password minimums
+    const passTestResult = owasp.test(newPass);
+    if (!passTestResult.strong) {
+      logger.log(
+        ERROR,
+        `Invalid new password entered: ${user.email}, errors: ${
+          passTestResult.errors
+        }`
+      );
       return {
-        status: 400,
         data: {
-          success: false,
-          msg: 'Incorrect password'
-        }
-      }
+          errors: passTestResult.errors,
+          msg: "Invalid new password"
+        },
+        status: 400
+      };
     }
-  },
+    // If the user provided the correct password, and their new password meets the
+    // minimum requirements, update their user record with the new password
+    const userRecord = await User.findOne({
+      where: { email: user.email }
+    });
+    await userRecord.updateAttributes({
+      password: bcrypt.hashSync(newPass, 10)
+    });
+    return { status: 200, data: { success: true } };
+  } else {
+    logger.log(DEBUG, "Incorrect password given during password change");
+    return {
+      data: {
+        msg: "Incorrect password",
+        success: false
+      },
+      status: 401
+    };
+  }
+};
+/*
   // Update the user's config option
   async updateUserConfig(user, key, value) {
     logger.log(
