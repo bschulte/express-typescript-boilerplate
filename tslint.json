@@ -13,7 +13,6 @@
       "arrow-call-signature"
     ],
     "no-inferrable-types": true,
-    "no-unused-variable": true,
     "max-line-length": false
   }
 }

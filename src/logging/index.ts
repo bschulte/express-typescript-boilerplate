@@ -1,10 +1,10 @@
 import { createLogger, format, LogEntry, Logger, transports } from "winston";
 const { combine, timestamp, simple, printf, colorize } = format;
 
-const INFO: string = "info";
-const DEBUG: string = "debug";
-const WARN: string = "warn";
-const ERROR: string = "error";
+const INFO = "info";
+const DEBUG = "debug";
+const WARN = "warn";
+const ERROR = "error";
 
 const customFormat = printf((info: LogEntry) => {
   const { timestamp, level, message, ...rest } = info;
@@ -47,7 +47,7 @@ if (process.env.NODE_ENV !== "production") {
 
 // Class for Morgan to use as a stream for logging
 class LoggerStream {
-  public write(message: string) {
+  public write(message: string): void {
     logger.info(message);
   }
 }

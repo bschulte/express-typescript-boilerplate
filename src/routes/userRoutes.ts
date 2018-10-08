@@ -7,7 +7,12 @@ import {
   login
 } from "../controllers/userController";
 
+import { authenticateUser } from "../middleware/authentication";
+
 const router: Router = Router();
+
+// Middleware
+router.use(authenticateUser);
 
 // Login a user
 router.get("/login", async (req: Request, res: Response) => {
