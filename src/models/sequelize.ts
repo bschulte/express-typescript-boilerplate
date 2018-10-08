@@ -12,4 +12,4 @@ const options: ISequelizeConfig = {
   username: process.env.DB_USER || "username"
 };
 
-export const sequelize = new Sequelize(options);
+export const sequelize: Sequelize = new Sequelize(options);

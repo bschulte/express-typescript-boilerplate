@@ -5,8 +5,11 @@ import {
   Model,
   Table,
   Unique,
-  UpdatedAt
+  UpdatedAt,
+  HasMany
 } from "sequelize-typescript";
+
+import Book from "./book.model";
 
 @Table
 export default class User extends Model<User> {
@@ -38,4 +41,7 @@ export default class User extends Model<User> {
 
   @Column
   public apiKey!: string;
+
+  @HasMany(() => Book)
+  public books: Book[];
 }

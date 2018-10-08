@@ -10,7 +10,6 @@
       "property-declaration",
       "arrow-parameter",
       "parameter",
-      "arrow-call-signature",
       "variable-declaration"
     ],
     "no-inferrable-types": true,
