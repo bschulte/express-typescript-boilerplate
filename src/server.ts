@@ -1,12 +1,14 @@
+import express from "express";
+import graphHTTP from "express-graphql";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import express from "express";
 import morgan from "morgan";
 import swagger from "swagger-ui-express";
 
 import { ERROR, INFO, logger, LoggerStream } from "./logging";
 import { sequelize } from "./models/sequelize";
 import { userRouter } from "./routes";
+import schema from "./graphql/schema";
 
 // Initialize any enviornment variables
 dotenv.config();
@@ -26,8 +28,17 @@ const port: number = Number(process.env.PORT) || 3000;
   app.use(morgan("combined", { stream: new LoggerStream() }));
 
   // Swagger API documentation
-  const swaggerDocument = require("../swagger.json");
+  const swaggerDocument: object = require("../swagger.json");
   app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocument));
+
+  // GraphQL
+  app.use(
+    "/query",
+    graphHTTP({
+      schema,
+      graphiql: true
+    })
+  );
 
   // Routes
   app.use("/user", userRouter);

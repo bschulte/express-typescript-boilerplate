@@ -10,9 +10,12 @@
       "property-declaration",
       "arrow-parameter",
       "parameter",
-      "arrow-call-signature"
+      "arrow-call-signature",
+      "variable-declaration"
     ],
     "no-inferrable-types": true,
-    "max-line-length": false
+    "max-line-length": false,
+    "object-literal-sort-keys": false,
+    "ordered-imports": false
   }
 }
