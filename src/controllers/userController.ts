@@ -35,7 +35,7 @@ export const createUser = async (
   const passHash: string = bcrypt.hashSync(password, 10);
 
   try {
-    const user = new User({
+    const user: User = new User({
       apiKey,
       email,
       password: passHash,

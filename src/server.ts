@@ -7,6 +7,7 @@ import swagger from "swagger-ui-express";
 
 import { ERROR, INFO, logger, LoggerStream } from "./logging";
 import { sequelize } from "./models/sequelize";
+import paramChecker from "./middleware/paramChecker";
 import { userRouter } from "./routes";
 import schema from "./graphql/schema";
 
@@ -26,6 +27,9 @@ const port: number = Number(process.env.PORT) || 3000;
 
   // Morgan logging
   app.use(morgan("combined", { stream: new LoggerStream() }));
+
+  // Use param checker middleware globally for routes
+  app.use(paramChecker);
 
   // Swagger API documentation
   const swaggerDocument: object = require("../swagger.json");

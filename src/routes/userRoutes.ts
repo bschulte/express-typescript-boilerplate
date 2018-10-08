@@ -8,6 +8,8 @@ import {
   login
 } from "../controllers/userController";
 
+import { User } from "../models";
+
 import { authenticateUser } from "../middleware/authentication";
 
 const router: Router = Router();
@@ -44,7 +46,7 @@ router.post("/", async (req: Request, res: Response) => {
 // Get user by ID
 router.get("/:userId", async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const user = await getUser(userId);
+  const user: User = await getUser(userId);
 
   if (user) {
     res.status(200).json(user);
@@ -71,7 +73,7 @@ router.put("/password", async (req: Request, res: Response) => {
 router.delete("/:userId", async (req: Request, res: Response) => {
   const { userId } = req.params;
 
-  const deleteWasSuccessful = await deleteUser(userId);
+  const deleteWasSuccessful: boolean = await deleteUser(userId);
 
   if (deleteWasSuccessful) {
     return res.status(200).json({ success: true });

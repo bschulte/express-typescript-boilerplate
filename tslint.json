@@ -10,7 +10,6 @@
       "property-declaration",
       "arrow-parameter",
       "parameter",
-      "variable-declaration"
     ],
     "no-inferrable-types": true,
     "max-line-length": false,
