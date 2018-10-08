@@ -4,7 +4,8 @@ import {
   Model,
   Table,
   UpdatedAt,
-  ForeignKey
+  ForeignKey,
+  BelongsTo
 } from "sequelize-typescript";
 import User from "./user.model";
 
@@ -25,4 +26,7 @@ export default class Book extends Model<Book> {
   @ForeignKey(() => User)
   @Column
   public userId!: number;
+
+  @BelongsTo(() => User)
+  public user: User;
 }
