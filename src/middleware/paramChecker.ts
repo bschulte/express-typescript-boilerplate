@@ -16,7 +16,7 @@ const checkUserParams = (req: Request) => {
     if (!hasAllParams(req.body, ["username", "email"])) {
       goodRequest = false;
       msg = "Either username or email is missing";
-      logger.log(ERROR, "User creation route missing either username or email");
+      logger.log(ERROR, `User creation route missing either username or email`);
     }
   }
 
