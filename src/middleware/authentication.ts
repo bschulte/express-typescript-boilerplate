@@ -9,6 +9,7 @@ import { DEBUG, ERROR, logger, WARN } from "../logging";
 // Returns the user object if it is found to match the given API key
 const verifyApiKey = async (req: Request): Promise<null | User> => {
   let key;
+  // Check in both the query string and request body for the API key
   if ("key" in req.query) {
     key = req.query.key;
   } else if ("key" in req.body) {
