@@ -45,7 +45,7 @@ const port: number = Number(process.env.PORT) || 3000;
   );
 
   // Routes
-  app.use("/user", userRouter);
+  app.use("/users", userRouter);
 
   app.listen(port, (err: Error) => {
     if (err) {
