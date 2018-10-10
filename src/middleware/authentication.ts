@@ -78,3 +78,22 @@ export const authenticateUser = async (
 
   return next();
 };
+
+// Check if the authenticated user is an admin or not
+export const isAdmin = async (
+  req: Request,
+  res: Response,
+  next: () => void
+): Promise<void | Response> => {
+  const { user } = res.locals;
+
+  if (!user.isAdmin) {
+    logger.log(
+      ERROR,
+      `Non admin user ${user.email} tried to access admin route: ${req.path}`
+    );
+    return res.sendStatus(401);
+  } else {
+    return next();
+  }
+};

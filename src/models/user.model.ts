@@ -42,6 +42,10 @@ export default class User extends Model<User> {
   @Column
   public apiKey!: string;
 
+  @Default(0)
+  @Column
+  public isAdmin!: number;
+
   @HasMany(() => Book)
   public books: Book[];
 }

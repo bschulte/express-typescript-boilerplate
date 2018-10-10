@@ -10,7 +10,7 @@ import {
 
 import { User } from "../models";
 
-import { authenticateUser } from "../middleware/authentication";
+import { authenticateUser, isAdmin } from "../middleware/authentication";
 
 const router: Router = Router();
 
@@ -27,6 +27,8 @@ router.get("/login", async (req: Request, res: Response) => {
 
 // Middleware
 router.use(authenticateUser);
+// All of the following routes require admin rights
+router.use(isAdmin);
 
 // Create user
 router.post("/", async (req: Request, res: Response) => {
