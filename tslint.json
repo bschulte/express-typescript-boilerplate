@@ -9,7 +9,7 @@
       "call-signature",
       "property-declaration",
       "arrow-parameter",
-      "parameter",
+      "parameter"
     ],
     "no-inferrable-types": true,
     "max-line-length": false,
