@@ -20,9 +20,8 @@ describe("userController", () => {
     });
 
     it("should handle an exception during user creation", async () => {
-      const userCreateStub = sinon.stub(User, "create").throws();
+      const userCreateStub = sinon.stub(User, "create").throwsException();
 
-      console.log(User.create);
       const { successfullyCreatedUser } = await userController.createUser(
         "test",
         "test"
