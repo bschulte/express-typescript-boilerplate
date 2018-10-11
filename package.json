@@ -4,17 +4,30 @@
   "description": "A boilerplate with Express, Typescript, Sequelize, and GraphQL",
   "main": "server.ts",
   "scripts": {
-    "test": "mocha",
+    "test": "NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/mocha -r ts-node/register --exit src/test/**/*.test.ts",
     "start": "ts-node src/server.ts",
-    "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.test.ts' --exec 'ts-node' src/server.ts",
     "lint": "./node_modules/.bin/tslint -c tslint.json --fix 'src/**/*.ts'",
     "docker:build": "./node_modules/.bin/ts-node ./scripts/dockerBuild.ts",
     "manageUsers": "./node_modules/.bin/ts-node ./scripts/userManagement.ts"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "all": true
   },
   "author": "bschulte@kryptowire.com",
   "license": "ISC",
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/chai": "^4.1.6",
     "@types/chalk": "^2.2.0",
     "@types/dotenv": "^4.0.3",
     "@types/express": "^4.16.0",
@@ -22,14 +35,17 @@
     "@types/figlet": "^1.2.0",
     "@types/graphql": "^14.0.1",
     "@types/jsonwebtoken": "^7.2.8",
+    "@types/mocha": "^5.2.5",
     "@types/moment": "^2.13.0",
     "@types/morgan": "^1.7.35",
     "@types/owasp-password-strength-test": "^1.3.0",
     "@types/readline-sync": "^1.4.3",
+    "@types/sinon": "^5.0.5",
     "@types/swagger-ui-express": "^3.0.0",
     "@types/winston": "^2.4.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
     "chalk": "^2.4.1",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
@@ -39,19 +55,26 @@
     "graphql-iso-date": "^3.6.1",
     "graphql-relay": "^0.5.5",
     "graphql-sequelize": "^9.0.2",
+    "istanbul": "^0.4.5",
     "jsonwebtoken": "^8.3.0",
+    "mocha": "^5.2.0",
     "moment": "^2.22.2",
     "morgan": "^1.9.1",
     "mysql2": "^1.6.1",
+    "nyc": "^13.0.1",
     "owasp-password-strength-test": "^1.3.0",
     "readline-sync": "^1.4.9",
     "reflect-metadata": "^0.1.12",
     "sequelize": "^4.39.0",
     "sequelize-typescript": "^0.6.6",
+    "sinon": "^6.3.5",
     "swagger-ui-express": "^4.0.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "typescript": "^3.1.1",
     "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "source-map-support": "^0.5.9"
   }
 }

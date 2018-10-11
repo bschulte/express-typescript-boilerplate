@@ -6,11 +6,10 @@ import owasp from "owasp-password-strength-test";
 import { DEBUG, ERROR, logger, WARN } from "../logging/";
 import { User } from "../models";
 import { sequelize } from "../models/sequelize";
-import { validateEmail } from "../util";
 // import emailer from "../Helpers/Email";
 
 // Generate a random string. Used for API key and random token creation
-export const generateRandomString = (strLength: number): string => {
+const generateRandomString = (strLength: number): string => {
   // Create a random string (like for generating API key)
   let text = "";
   const possible =

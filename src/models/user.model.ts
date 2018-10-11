@@ -4,7 +4,6 @@ import {
   Default,
   Model,
   Table,
-  Unique,
   UpdatedAt,
   HasMany
 } from "sequelize-typescript";
