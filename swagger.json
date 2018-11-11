@@ -12,101 +12,12 @@
     {
       "name": "user",
       "description": "Access to users"
-    },
-    {
-      "name": "records",
-      "description": "Access to sensor record readings"
-    },
-    {
-      "name": "device",
-      "description": "Access to devices being used in studies"
-    },
-    {
-      "name": "survey-question",
-      "description": "Access to survey questions for studies"
     }
   ],
   "paths": {
-    "/records": {
-      "post": {
-        "tags": [
-          "records"
-        ],
-        "summary": "Post multiple sensor records",
-        "operationId": "postRecords",
-        "parameters": {
-          "key": {
-            "name": "API key",
-            "type": "string"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "platform": {
-                    "type": "string",
-                    "example": "android"
-                  },
-                  "type": {
-                    "type": "string",
-                    "description": "Sensor type",
-                    "example": "accelerometer"
-                  },
-                  "records": {
-                    "type": "string",
-                    "example": "some_base_64_encoded_string",
-                    "description": "This is the base64 encoded string of the encrypted sensor records. The data should just be an array of sensor records."
-                  },
-                  "clientId": {
-                    "type": "string",
-                    "name": "Client ID",
-                    "description": "Unique client ID for each device",
-                    "example": "LWEH3823-2343FSD23-12SDF2-H3J5H"
-                  },
-                  "key": {
-                    "type": "string",
-                    "name": "API key"
-                  },
-                  "dataSize": {
-                    "type": "number",
-                    "example": 23451,
-                    "description": "Size of the base64 decoded, unecnrypted data (in bytes)"
-                  },
-                  "numRecords": {
-                    "type": "number",
-                    "example": 734,
-                    "description": "The number of records in the array being uploaded."
-                  },
-                  "startTime": {
-                    "type": "number",
-                    "example": 1541523552,
-                    "description": "Timestamp (unix timestamp) of the time the first record in the bunch was recorded."
-                  },
-                  "endTime": {
-                    "type": "number",
-                    "example": 1541583552,
-                    "description": "Timestamp (unix timestamp) of the time the last record in the bunch was recorded."
-                  }
-                },
-                "required": [
-                  "records",
-                  "platform"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
     "/users": {
       "post": {
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "summary": "Create a new user",
         "description": "",
         "operationId": "createUser",
@@ -126,10 +37,7 @@
                     "example": "testuser"
                   }
                 },
-                "required": [
-                  "email",
-                  "username"
-                ]
+                "required": ["email", "username"]
               }
             }
           }
@@ -152,9 +60,7 @@
                       "example": "23oihf9283hf203ijf2io3jf"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -164,9 +70,7 @@
     },
     "/user/{userId}": {
       "get": {
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "summary": "Get user by user name",
         "operationId": "getUserById",
         "parameters": [
@@ -202,9 +106,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "summary": "Delete user by ID",
         "operationId": "deleteUserById",
         "parameters": [
@@ -248,9 +150,7 @@
     },
     "/verify-auth": {
       "get": {
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "summary": "Verify that a user's API key/token is valid",
         "description": "",
         "operationId": "verifyAuth",
@@ -279,9 +179,7 @@
     },
     "/login": {
       "post": {
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "summary": "Login user",
         "requestBody": {
           "required": true,
@@ -299,10 +197,7 @@
                     "example": "bestpassw0RdEver1337"
                   }
                 },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                "required": ["email", "password"]
               }
             }
           }
@@ -311,9 +206,7 @@
     },
     "/user/password": {
       "put": {
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "summary": "Change a user's password",
         "description": "",
         "operationId": "changePassword",
@@ -346,114 +239,6 @@
           },
           "401": {
             "description": "Unauthorized"
-          }
-        }
-      }
-    },
-    "/device/register": {
-      "post": {
-        "tags": [
-          "device"
-        ],
-        "summary": "Register a new device using a user's registration code",
-        "operationId": "registerDevice",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "registrationCode": {
-                    "type": "string",
-                    "example": "WEIOKD"
-                  },
-                  "deviceName": {
-                    "type": "string",
-                    "example": "iPhone X",
-                    "description": "Name of the device"
-                  },
-                  "osVersion": {
-                    "type": "string",
-                    "example": "12.0.1",
-                    "description": "iOS or Android version"
-                  },
-                  "platform": {
-                    "type": "string",
-                    "example": "ios",
-                    "description": "Should be either \"ios\" or \"android\""
-                  }
-                },
-                "required": [
-                  "registrationCode",
-                  "deviceName",
-                  "osVersion",
-                  "platform"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful registration, will contain clientId",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "clientId": {
-                      "type": "string",
-                      "example": "7afd0910-0ced-4dac-94b3-4a3bed941ef7"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/survey-question/answer": {
-      "post": {
-        "tags": [
-          "survey-question"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "clientId": {
-                    "type": "string",
-                    "example": "7d6e8fab-085c-4f7b-a842-370367ed8847"
-                  },
-                  "surveyQuestionId": {
-                    "type": "integer",
-                    "example": 23,
-                    "description": "Internal survey question ID being answered. We will create a mapping prior to deploying the app."
-                  },
-                  "answer": {
-                    "type": "string",
-                    "example": "Yes, things hurt a bit",
-                    "description": "Answer to the survey question. Will always be a string."
-                  },
-                  "timeToAnswer": {
-                    "type": "integer",
-                    "example": 2345,
-                    "description": "How long it took the user to answer the question. Time from being shown the answer to submitting the answer. Should be measured in ms."
-                  }
-                },
-                "required": [
-                  "clientId",
-                  "surveyQuestionId",
-                  "answer",
-                  "timeToAnswer"
-                ]
-              }
-            }
           }
         }
       }
@@ -498,6 +283,10 @@
           "lastLogin": {
             "type": "string",
             "format": "date-time"
+          },
+          "isAdmin": {
+            "type": "integer",
+            "example": 1
           }
         }
       }
