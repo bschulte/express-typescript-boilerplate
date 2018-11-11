@@ -51,7 +51,7 @@ const verifyToken = async (req: Request): Promise<null | User> => {
   return user;
 };
 
-// Use the two funcitons declared previously to attempt to validate the user either through
+// Use the two functions declared previously to attempt to validate the user either through
 // JWT or API key. If authenticated, the user will be stored in res.locals.user for reference
 // further in the call chain
 export const authenticateUser = async (
@@ -71,12 +71,30 @@ export const authenticateUser = async (
       DEBUG,
       `Could not verify user for path: ${req.baseUrl}/${req.path}`
     );
+
+    logger.log(DEBUG, `Body params: ${JSON.stringify(req.body)}`);
+    logger.log(DEBUG, `Query params: ${JSON.stringify(req.query)}`);
+
     return res.sendStatus(401);
   }
 
   res.locals.user = user;
 
   return next();
+};
+
+// Authenticate a user to view the API docs. We only want to perform the authentication on
+// the first request, not the subsequent resource requests.
+export const authenticateApiDocsUser = async (
+  req: Request,
+  res: Response,
+  next: () => void
+): Promise<void | Response> => {
+  if (req.path === "/") {
+    return authenticateUser(req, res, next);
+  } else {
+    return next();
+  }
 };
 
 // Check if the authenticated user is an admin or not
@@ -90,7 +108,9 @@ export const isAdmin = async (
   if (!user.isAdmin) {
     logger.log(
       ERROR,
-      `Non admin user ${user.email} tried to access admin route: ${req.path}`
+      `Non admin user ${user.email} tried to access admin route: ${
+        req.originalUrl
+      }`
     );
     return res.sendStatus(401);
   } else {

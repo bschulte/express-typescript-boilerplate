@@ -1,4 +1,5 @@
 import User from "./user.model";
-import Book from "./book.model";
+import Notification from "./notification.model";
+import NotificationStatus from "./notificationStatus.model";
 
-export { User, Book };
+export { User, Notification, NotificationStatus };

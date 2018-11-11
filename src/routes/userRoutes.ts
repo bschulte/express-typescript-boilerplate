@@ -17,8 +17,8 @@ const router: Router = Router();
 // Login a user
 // Make sure to keep this before we declare the middleware since
 // the login route obviously won't already be authenticated
-router.get("/login", async (req: Request, res: Response) => {
-  const { email, password } = req.query;
+router.post("/login", async (req: Request, res: Response) => {
+  const { email, password } = req.body;
 
   const { status, data } = await login(email, password);
 
@@ -27,6 +27,12 @@ router.get("/login", async (req: Request, res: Response) => {
 
 // Middleware
 router.use(authenticateUser);
+
+// Simple route to verify if the user's provided API key/token is valid
+router.get("/verify-auth", (req: Request, res: Response) => {
+  return res.status(200).json({ email: res.locals.user.email });
+});
+
 // All of the following routes require admin rights
 router.use(isAdmin);
 
@@ -48,7 +54,8 @@ router.post("/", async (req: Request, res: Response) => {
 // Get user by ID
 router.get("/:userId", async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const user: User = await getUser(userId);
+  const { user: authenticatedUser } = res.locals;
+  const user: User = await getUser(userId, authenticatedUser);
 
   if (user) {
     res.status(200).json(user);
@@ -82,11 +89,6 @@ router.delete("/:userId", async (req: Request, res: Response) => {
   } else {
     return res.status(404).json({ success: false, msg: "Could not find user" });
   }
-});
-
-// Simple route to verify if the user's provided API key/token is valid
-router.get("/verify-auth", (req: Request, res: Response) => {
-  return res.sendStatus(200);
 });
 
 export const userRouter: Router = router;

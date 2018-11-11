@@ -37,8 +37,6 @@ const checkUserParams = (req: Request) => {
 
 // Verify that the various API routes have their appropriate parameters
 export default (req: Request, res: Response, next: () => void) => {
-  logger.log(DEBUG, `Path: ${req.path}, method: ${req.method}`);
-
   let checkResult = { goodRequest: true, msg: "" };
   if (req.path.startsWith("/user")) {
     checkResult = checkUserParams(req);

@@ -7,8 +7,7 @@ import {
   UpdatedAt,
   HasMany
 } from "sequelize-typescript";
-
-import Book from "./book.model";
+import NotificationStatus from "./notificationStatus.model";
 
 @Table
 export default class User extends Model<User> {
@@ -45,6 +44,6 @@ export default class User extends Model<User> {
   @Column
   public isAdmin!: number;
 
-  @HasMany(() => Book)
-  public books: Book[];
+  @HasMany(() => NotificationStatus, "userId")
+  public notifications: NotificationStatus[];
 }

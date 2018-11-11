@@ -34,13 +34,12 @@ export const createUser = async (
   const passHash: string = bcrypt.hashSync(password, 10);
 
   try {
-    const user: User = new User({
+    const user: User = await User.create({
       apiKey,
       email,
       password: passHash,
       username
     });
-    await user.save();
 
     logger.log("debug", `User entered into DB: ${JSON.stringify(user)}`);
 
@@ -52,18 +51,24 @@ export const createUser = async (
 };
 
 // Get a user by ID
-export const getUser = async (userId: number): Promise<any> => {
+export const getUser = async (
+  userId: number,
+  authenticatedUser: User
+): Promise<any> => {
+  // Check if the authenticated user is an admin
+  if (!authenticatedUser.isAdmin) {
+    return null;
+  }
+
   const user = await User.findOne({
     attributes: { exclude: ["password"] },
     where: { id: userId }
   });
 
   if (user) {
-    // We don't want to return the user's password hash
-    delete user.password;
     return user;
   } else {
-    logger.log(WARN, `Could not find user! Provied is: ${userId}`);
+    logger.log(WARN, `Could not find user! Provided is: ${userId}`);
     return null;
   }
 };

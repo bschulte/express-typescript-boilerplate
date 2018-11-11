@@ -1,39 +1,48 @@
-import {
-  GraphQLSchema,
-  GraphQLObjectType,
-  GraphQLInt,
-  GraphQLList
-} from "graphql";
-import { resolver } from "graphql-sequelize";
-import { userType, bookType } from "./types";
-import { User, Book } from "../models";
+import { attributeFields } from "graphql-sequelize";
+import { makeExecutableSchema } from "graphql-tools";
+import { User, Notification, NotificationStatus } from "../models";
+import resolvers from "./resolvers";
 
-const query: GraphQLObjectType = new GraphQLObjectType({
-  name: "Query",
-  fields: {
-    // Single user search
-    user: {
-      type: userType,
-      args: {
-        id: { type: GraphQLInt }
-      },
-      resolve: resolver(User)
-    },
+// graphql-sequelize's attributeFields converts the Sequelize model into
+// the schema style of strict object declaration. Here we are converting
+// that representation to the corresponding GraphQL language string
+const convertToGql = (attributesList: any) => {
+  const result = JSON.stringify(attributesList, null, 2)
+    .replace(/"(.*)": {\s*"type": "(.*)"\s.*},?/g, "$1: $2")
+    .replace(/[{,}]/g, "");
+  return result;
+};
 
-    // Multiple users
-    users: {
-      type: new GraphQLList(userType),
-      resolve: resolver(User)
-    },
+const typeDefs = `
+  scalar Date
 
-    // Multiple books search
-    books: {
-      type: new GraphQLList(bookType),
-      resolve: resolver(Book)
-    }
+  type Query {
+    user(id: Int!): User
+    users: [User]
+    notifications: [NotificationStatus]
   }
-});
 
-export default new GraphQLSchema({
-  query
+  type Mutation {
+    updateNotificationStatus(notificationUuid: String!, newStatus: String!): NotificationStatus
+  }
+
+  type User {
+    ${convertToGql(attributeFields(User))}
+    notifications: [NotificationStatus]
+  }
+
+  type Notification {
+    ${convertToGql(attributeFields(Notification))}
+  }
+
+  type NotificationStatus {
+    ${convertToGql(attributeFields(NotificationStatus))}
+    notification: Notification
+  }
+
+`;
+
+export default makeExecutableSchema({
+  typeDefs,
+  resolvers
 });

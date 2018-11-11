@@ -1,3 +1,4 @@
 import { userRouter } from "./userRoutes";
+import { notificationRouter } from "./notificationRoutes";
 
-export { userRouter };
+export { userRouter, notificationRouter };
